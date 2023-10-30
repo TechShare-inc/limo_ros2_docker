@@ -12,7 +12,7 @@ Dockerを使ってLIMOをROS2から動かすための環境セットアップ用
 ~~~
 cd ~
 
-git clone https://github.com/TechShare-inc/limo_ros2_docker.git
+git clone -b foxy https://github.com/TechShare-inc/limo_ros2_docker.git
 ~~~
 
 ## 2. 必要な依存パッケージを用意する
