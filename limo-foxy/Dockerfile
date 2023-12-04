@@ -4,9 +4,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /root/ros2_ws/
 
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 42D5A192B819C5DA \
-    && apt-get update \
-    && apt-get install -qq -y --no-install-recommends \
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 4B63CF8FDE49746E98FA01DDAD19BAB3CBF125EA
+
+RUN apt-get update && \
+    apt-get install -qq -y --no-install-recommends \
     build-essential \
     cmake \
     git \
@@ -17,7 +18,6 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 42D5A192B819C5DA \
     libglfw3-dev \
     libgl1-mesa-dev \
     libglu1-mesa-dev \    
-    curl \	
     libusb-1.0-0 \
     udev \
     apt-transport-https \
@@ -58,18 +58,4 @@ RUN echo "source /opt/ros/foxy/setup.bash" >> /etc/bash.bashrc && \
     echo "source /root/ros2_ws/install/setup.bash" >> /etc/bash.bashrc
 
 
-
-# ** [可选] 取消注释安装其他组件 **
-#
-# ENV DEBIAN_FRONTEND=noninteractive
-# RUN apt-get update \
-#    && apt-get -y install --no-install-recommends <your-package-list-here> \
-#    #
-#    # Clean up
-#    && apt-get autoremove -y \
-#    && apt-get clean -y \
-#    && rm -rf /var/lib/apt/lists/*
-# ENV DEBIAN_FRONTEND=dialog
-
-# 配置自动 source
 
