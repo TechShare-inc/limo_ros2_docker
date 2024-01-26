@@ -17,5 +17,5 @@ services:
                 runtime: nvidia
                 build: ./limo-foxy
                 image: limo-foxy
-                container_name: limo_foxy_dev
+                container_name: astra
 
