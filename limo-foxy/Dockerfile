@@ -4,6 +4,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /root/ros2_ws/
 
+RUN mkdir -p /root/ros2_ws/src/
+
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 4B63CF8FDE49746E98FA01DDAD19BAB3CBF125EA
 
 RUN apt-get update && \
@@ -19,6 +21,9 @@ RUN apt-get update && \
     libgl1-mesa-dev \
     libglu1-mesa-dev \    
     libusb-1.0-0 \
+    libgflags-dev \
+    libgoogle-glog-dev \
+    libeigen3-dev \
     udev \
     apt-transport-https \
     ca-certificates \
@@ -27,6 +32,9 @@ RUN apt-get update && \
     swig \
     software-properties-common \
     python3-pip \
+    nlohmann-json3-dev
+
+RUN apt-get install -qq -y --no-install-recommends \
     ros-foxy-joint-state-publisher-gui \
     ros-foxy-rqt-robot-steering \
     ros-foxy-teleop-twist-keyboard\
@@ -34,7 +42,10 @@ RUN apt-get update && \
     ros-foxy-navigation2 \
     ros-foxy-nav2-bringup \
     ros-foxy-rviz2 \
-    && rm -rf /var/lib/apt/lists/*
+    ros-foxy-image-geometry \
+    ros-foxy-image-transport \
+    ros-foxy-image-publisher \
+    ros-foxy-camera-info-manager
 
 RUN git clone https://github.com/YDLIDAR/YDLidar-SDK.git &&\
     mkdir -p YDLidar-SDK/build && \
@@ -46,10 +57,24 @@ RUN git clone https://github.com/YDLIDAR/YDLidar-SDK.git &&\
     pip install . &&\
     cd .. && rm -r YDLidar-SDK 
 
-RUN mkdir -p /root/ros2_ws/src/ && \
-    . /opt/ros/foxy/setup.sh && \
-    cd /root/ros2_ws/src && \
-    git clone -b foxy https://github.com/agilexrobotics/limo_ros2.git && \
+
+RUN git clone https://github.com/libuvc/libuvc.git &&\
+    mkdir -p libuvc/build &&\
+    cd libuvc/build &&\
+    cmake .. &&\
+    make &&\
+    make install &&\
+    ldconfig &&\
+    cd ../.. &&\
+    rm -r libuvc
+
+RUN cd /root/ros2_ws/src && \
+    git clone https://github.com/orbbec/ros2_astra_camera.git
+
+RUN cd /root/ros2_ws/src && \
+    git clone -b foxy https://github.com/agilexrobotics/limo_ros2.git
+
+RUN . /opt/ros/foxy/setup.sh && \
     cd /root/ros2_ws && \
     colcon build && \
     bash /root/ros2_ws/install/setup.bash
